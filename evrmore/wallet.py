@@ -26,6 +26,8 @@ import evrmore
 import array
 import sys
 
+from evrmore.core.serialize import Hash160
+
 _bord = ord
 def _tobytes(x): return array.array('B', x).tostring()
 
@@ -399,6 +401,26 @@ class CEvrmoreSecret(evrmore.base58.CBase58Data, CKey):
                       32 and _bord(self[32]) == 1)
 
 
+def create_p2sh_address(redeem_script):
+    """
+    Create a P2SH address from a redeem script.
+    
+    :param redeem_script: CScript redeem script
+    :return: P2SHEvrmoreAddress
+    """
+    script_hash = Hash160(redeem_script)
+    return P2SHEvrmoreAddress.from_bytes(script_hash)
+
+def create_p2sh_output_script(address):
+    """
+    Create a P2SH output script for an address.
+    
+    :param address: P2SHEvrmoreAddress
+    :return: CScript output script
+    """
+    return script.CScript([script.OP_HASH160, Hash160(address), script.OP_EQUAL])
+
+
 __all__ = (
     'CEvrmoreAddressError',
     'CEvrmoreAddress',
@@ -411,4 +433,6 @@ __all__ = (
     'CKey',
     'CEvrmoreSecretError',
     'CEvrmoreSecret',
+    'create_p2sh_address',
+    'create_p2sh_output_script',
 )

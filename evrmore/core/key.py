@@ -160,7 +160,8 @@ _ssl.ECDSA_size.restype = ctypes.c_int
 _ssl.ECDSA_size.argtypes = [ctypes.c_void_p]
 
 _ssl.ECDSA_verify.restype = ctypes.c_int
-_ssl.ECDSA_verify.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p]
+_ssl.ECDSA_verify.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int,
+                                ctypes.c_char_p, ctypes.c_int, ctypes.c_void_p]
 
 _ssl.ECDSA_SIG_free.restype = None
 _ssl.ECDSA_SIG_free.argtypes = [ctypes.c_void_p]
