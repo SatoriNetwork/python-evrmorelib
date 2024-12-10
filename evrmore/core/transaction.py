@@ -40,3 +40,7 @@ class CMultiSigTransaction(CTransaction):
         
         # Apply to transaction input
         self.vin[0].scriptSig = scriptSig
+
+__all__ = (
+    'CMultiSigTransaction',
+)

@@ -209,7 +209,7 @@ class P2PKHEvrmoreAddress(CBase58EvrmoreAddress):
 
         elif nVersion != evrmore.params.BASE58_PREFIXES['PUBKEY_ADDR']:
             raise ValueError('nVersion incorrect for P2PKH address: got %d; expected %d' %
-                             (nVersion, evrmore.params.BASE58_PREFIXES['PUBKEY_ADDR']))
+                                (nVersion, evrmore.params.BASE58_PREFIXES['PUBKEY_ADDR']))
 
         return super(P2PKHEvrmoreAddress, cls).from_bytes(data, nVersion)
 
@@ -400,27 +400,6 @@ class CEvrmoreSecret(evrmore.base58.CBase58Data, CKey):
         CKey.__init__(self, self[0:32], len(self) >
                       32 and _bord(self[32]) == 1)
 
-
-def create_p2sh_address(redeem_script):
-    """
-    Create a P2SH address from a redeem script.
-    
-    :param redeem_script: CScript redeem script
-    :return: P2SHEvrmoreAddress
-    """
-    script_hash = Hash160(redeem_script)
-    return P2SHEvrmoreAddress.from_bytes(script_hash)
-
-def create_p2sh_output_script(address):
-    """
-    Create a P2SH output script for an address.
-    
-    :param address: P2SHEvrmoreAddress
-    :return: CScript output script
-    """
-    return script.CScript([script.OP_HASH160, Hash160(address), script.OP_EQUAL])
-
-
 __all__ = (
     'CEvrmoreAddressError',
     'CEvrmoreAddress',
@@ -433,6 +412,4 @@ __all__ = (
     'CKey',
     'CEvrmoreSecretError',
     'CEvrmoreSecret',
-    'create_p2sh_address',
-    'create_p2sh_output_script',
 )

@@ -1,16 +1,11 @@
 import unittest
 from evrmore.core.key import CPubKey, CECKey
-from evrmore.core.script import (
-    CScript, 
-    OP_CHECKMULTISIG,
-    create_multisig_redeem_script,
-    verify_multisig_script,
-    verify_signature
-)
 import os
 import hashlib
 
-from evrmore.wallet import P2SHEvrmoreAddress, create_p2sh_address, create_p2sh_output_script
+from evrmore.core.script import OP_CHECKMULTISIG, CScript, CreateMultisigRedeemScript
+from evrmore.crypto import verify_multisig_script, verify_signature
+from evrmore.wallet import P2PKHEvrmoreAddress, P2SHEvrmoreAddress
 from evrmore.core.transaction import CMultiSigTransaction
 
 class TestP2SHFunctions(unittest.TestCase):
@@ -23,17 +18,17 @@ class TestP2SHFunctions(unittest.TestCase):
             privkey.set_secretbytes(os.urandom(32))
             self.private_keys.append(privkey)
             self.public_keys.append(CPubKey(privkey.get_pubkey()))
-        print("Private Keys: ", self.private_keys)
-        print("Public Keys: ", self.public_keys)
+        # print("Private Keys: ", self.private_keys)
+        # print("Public Keys: ", self.public_keys)
 
     def test_create_multisig_redeem_script(self):
-        script = create_multisig_redeem_script(2, self.public_keys)
+        script = CreateMultisigRedeemScript(2, self.public_keys)
         self.assertIsInstance(script, CScript)
         self.assertEqual(script[-1], OP_CHECKMULTISIG)
         
         # Test invalid parameters
         with self.assertRaises(ValueError):
-            create_multisig_redeem_script(4, self.public_keys)  # m > n
+            CreateMultisigRedeemScript(4, self.public_keys)  # m > n
             
     def test_verify_signature(self):
         msg = b"test message"
@@ -51,9 +46,15 @@ class TestP2SHFunctions(unittest.TestCase):
         # print(f"Double SHA256 hash: {msg_hash.hex()}")
         # print(f"Raw signature (hex): {sig.hex()}")
         # print(f"Signature with hashtype (hex): {sig_with_hashtype.hex()}")
-        # print(f"Public key: {pubkey.hex()}")
+        print("private key: ", privkey.get_privkey().hex())
+        print(f"Public key: {pubkey.hex()}")
+        private_key_bytes = bytes.fromhex(privkey.get_privkey().hex())
+        print("private key bytes: ", private_key_bytes)
         # print(f"Signature length: {len(sig)}")
-        
+        public_key_bytes = bytes.fromhex(pubkey.hex())
+        print("public key bytes: ", public_key_bytes)
+        p2pkh_address = P2PKHEvrmoreAddress.from_pubkey(public_key_bytes)
+        print("p2pkh address: ", p2pkh_address)
         # Verify both signature formats
         result1 = verify_signature(sig, pubkey, msg_hash)
         result2 = verify_signature(sig_with_hashtype, pubkey, msg_hash)
@@ -65,8 +66,8 @@ class TestP2SHFunctions(unittest.TestCase):
         msg_hash = hashlib.sha256(hashlib.sha256(msg).digest()).digest()
         
         # Create redeem script
-        script = create_multisig_redeem_script(2, self.public_keys)
-        # print("redeem script: ", script)
+        script = CreateMultisigRedeemScript(2, self.public_keys)
+        print("redeem script: ", script)
         # Create signatures
         signatures = []
         for i in range(2):  # We need 2 signatures
@@ -92,19 +93,19 @@ class TestP2SHFunctions(unittest.TestCase):
     def test_create_and_verify_p2sh_address(self):
         try:
             # Create a redeem script
-            redeem_script = create_multisig_redeem_script(2, self.public_keys)
+            redeem_script = CreateMultisigRedeemScript(2, self.public_keys)
             # print("Redeem Script Created", redeem_script)
 
             # Generate P2SH address
-            p2sh_address = create_p2sh_address(redeem_script)
-            # print("P2SH Address Generated", p2sh_address)
+            p2sh_address = P2SHEvrmoreAddress.from_redeemScript(redeem_script)
+            print("P2SH Address Generated", p2sh_address)
 
             # Verify the P2SH address is an instance of P2SHEvrmoreAddress
             self.assertIsInstance(p2sh_address, P2SHEvrmoreAddress)
             # print("P2SH Address Verified")
 
             # Create a P2SH output script
-            p2sh_output_script = create_p2sh_output_script(p2sh_address)
+            p2sh_output_script = CScript.create_p2sh_output_script(p2sh_address)
             # print("P2SH Output Script Created", p2sh_output_script)
 
             # Verify the output script is a valid P2SH script
@@ -117,7 +118,7 @@ class TestP2SHFunctions(unittest.TestCase):
 
     # def test_spend_p2sh_address(self):
     #     # Create a redeem script
-    #     redeem_script = create_multisig_redeem_script(2, self.public_keys)
+    #     redeem_script = CreateMultisigRedeemScript(2, self.public_keys)
         
     #     # Generate P2SH address
     #     p2sh_address = create_p2sh_address(redeem_script)
