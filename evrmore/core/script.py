@@ -813,15 +813,6 @@ class CScript(bytes):
             raise ValueError(
                 "redeemScript exceeds max allowed size; P2SH output would be unspendable")
         return CScript([OP_HASH160, evrmore.core.Hash160(self), OP_EQUAL])
-    
-    def create_p2sh_output_script(address):
-        """
-        Create a P2SH output script for an address.
-        
-        :param address: P2SHEvrmoreAddress
-        :return: CScript output script
-        """
-        return CScript([OP_HASH160, Hash160(address), OP_EQUAL])
 
     def GetSigOpCount(self, fAccurate):
         """Get the SigOp count.

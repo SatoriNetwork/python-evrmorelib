@@ -105,8 +105,8 @@ class TestP2SHFunctions(unittest.TestCase):
             # print("P2SH Address Verified")
 
             # Create a P2SH output script
-            p2sh_output_script = CScript.create_p2sh_output_script(p2sh_address)
-            # print("P2SH Output Script Created", p2sh_output_script)
+            p2sh_output_script = CScript.to_p2sh_scriptPubKey(redeem_script)
+            print("another p2sh output script: ", p2sh_output_script)
 
             # Verify the output script is a valid P2SH script
             self.assertTrue(p2sh_output_script.is_p2sh())
