@@ -14,7 +14,6 @@ class CMultiSigTransaction(CMutableTransaction):
         :param sigversion: Signature version
         :return: List of signatures
         """
-#<<<<<<< feature/p2sh
         try:
             # Calculate the sighash using the redeem script
             sighash = SignatureHash(redeem_script, self, 0, SIGHASH_ALL, sigversion)
@@ -55,38 +54,7 @@ class CMultiSigTransaction(CMutableTransaction):
 
         except Exception as e:
             raise ValueError(f"Error applying multisig signatures: {e}")
-#=======
-#        sighash = SignatureHash(redeem_script, self, 0, SIGHASH_ALL, sigversion)
-#        signatures = []
-#        
-#        for privkey in private_keys:
-#            if len(signatures) >= len(redeem_script.required):
-#                break
-#            sig = privkey.sign(sighash) + bytes([SIGHASH_ALL])
-#            signatures.append(sig)
-#            
-#        return signatures
-#        
-#    def apply_multisig_signatures(self, signatures, redeem_script):
-#        """
-#        Apply multiple signatures to a multisig transaction.
-#        
-#        :param signatures: List of signatures
-#        :param redeem_script: CScript redeem script
-#        """
-#        # Create scriptSig with signatures and redeem script
-#        scriptSig = CScript([OP_0])  # OP_0 for multisig bug
-#        for sig in signatures:
-#            scriptSig += CScript([sig])
-#        scriptSig += CScript([redeem_script])
-#        
-#        # Apply to transaction input
-#        self.vin[0].scriptSig = scriptSig
-#
-#__all__ = (
-#    'CMultiSigTransaction',
-#)
-#>>>>>>> master
+
 __all__ = (
     'CMultiSigTransaction',
 )
