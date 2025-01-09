@@ -95,17 +95,12 @@ class TestP2SHFunctions(unittest.TestCase):
         try:
             # Create a redeem script
             redeem_script = CreateMultisigRedeemScript(2, self.public_keys)
-#<<<<<<< feature/p2sh
             print("Redeem Script Created", redeem_script.hex())
             for pubkey in self.public_keys:
                 public_key_bytes = bytes.fromhex(pubkey.hex())
                 p2pkh_address = P2PKHEvrmoreAddress.from_pubkey(public_key_bytes)
                 print("p2pkh address: ", pubkey.hex())
                 # Generate P2SH address
-#=======
-#            # print("Redeem Script Created", redeem_script)
-#            # Generate P2SH address
-#>>>>>>> master
             p2sh_address = P2SHEvrmoreAddress.from_redeemScript(redeem_script)
             print("P2SH Address Generated", p2sh_address)
 
