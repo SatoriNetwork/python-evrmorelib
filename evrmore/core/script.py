@@ -1074,14 +1074,9 @@ def CreateMultisigRedeemScript(required, pubkeys):
     
     script = CScript([required])  # m
     for pubkey in pubkeys:
-#<<<<<<< feature/p2sh
         script += pubkey  # Add each public key
     script += len(pubkeys)  # n OP_CHECKMULTISIG
     script += OP_CHECKMULTISIG
-#=======
-#        script += CScript([pubkey])  # Add each public key
-#    script += CScript([len(pubkeys), OP_CHECKMULTISIG])  # n OP_CHECKMULTISIG
-#>>>>>>> master
     return script
 
 __all__ = (
