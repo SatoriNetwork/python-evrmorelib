@@ -1,7 +1,6 @@
 from evrmore.core import CMutableTransaction, CTransaction
 from evrmore.core.script import OP_0, SIGHASH_ALL, SIGVERSION_BASE, CScript, SignatureHash
 
-
 class CMultiSigTransaction(CMutableTransaction):
     """Transaction type for multisig operations with secure handling."""
     
@@ -30,6 +29,7 @@ class CMultiSigTransaction(CMutableTransaction):
         try:
             signature = private_key.sign(sighash) + bytes([SIGHASH_ALL])
             return signature
+
         except Exception as e:
             raise ValueError(f"Error signing transaction: {e}")
 
