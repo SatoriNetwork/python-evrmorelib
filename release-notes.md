@@ -1,5 +1,9 @@
 # python-evrmorelib release notes
 
+## v0.2.12 - Feb 2025
+
+* refactor of sign and verify
+
 ## v0.2.9 - Jan 2025
 
 * made requirements file single source of truth
