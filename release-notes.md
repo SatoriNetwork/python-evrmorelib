@@ -1,6 +1,6 @@
 # python-evrmorelib release notes
 
-## v0.2.12 - Feb 2025
+## v0.2.13 - Feb 2025
 
 * refactor of sign and verify
 
